@@ -7,6 +7,15 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P8: Incomplete but stable Map Ifs
+I'm trying to set up code that will appropriately determine which url is next while paginating.
+We're not there yet. I have what I think will be the relevant conditional structure, but
+telling it what to do in the relevant situations will involve a lot of code. I'm saving here
+at a stable point to avoid having to go too far back.
+- Refactored the result and mappage structs out of the mapout function and into structs.go
+- Modified commands.go to start featuring what I think will be the structure for paginating
+
+
 ###Commit P7: Mapout Unmarshalling Mappages
 The map command now passes a url to mapout which relies on that url instead of its own static one. 
 Then mapout doesn't just print the raw text of the url but instead breaks it down into the 

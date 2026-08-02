@@ -28,7 +28,18 @@ func getCommandList() map[string]cliCommand {
 }
 
 func commandMap(map_conf *config) error {
-	url := "https://pokeapi.co/api/v2/location-area/"
+	url := ""
+	if map_conf.prv_pg == "" { //if we're at the start of the pages
+		url = "https://pokeapi.co/api/v2/location-area/"
+		map_conf.prv_pg = url
+		//map_conf.nxt_pg = 
+	} else if map_conf.nxt_pg == "" { //if we're at the end of the pages
+		println("End of pages. Looping over")
+		url = "https://pokeapi.co/api/v2/location-area/"
+		map_conf.prv_pg = ""
+	} else {
+		url = map_conf.nxt_pg
+	}
 	mapout(url)
 	return nil
 }
@@ -46,16 +57,6 @@ func mapout(url string) error {
 	if err != nil { //check for other errors with reading
 		log.Fatal(err)
 	}
-	type result struct {
-                Name    string
-                Url     string
-        }
-        type mappage struct {
-                Count           int
-                Next            string
-                Previous        string
-                Results         []result
-        }
         var unmarshalledBody mappage
         err2 := json.Unmarshal(body, &unmarshalledBody)
         if err2 != nil {
@@ -65,6 +66,7 @@ func mapout(url string) error {
         for i := range unmarshalledBody.Results {
                 fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
         }
+	// *map_conf unmarshalledBody.Next
         return nil
 }
 
