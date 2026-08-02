@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"encoding/json"
 )
 
 func getCommandList() map[string]cliCommand {
@@ -27,24 +28,43 @@ func getCommandList() map[string]cliCommand {
 }
 
 func commandMap(map_conf *config) error {
-	mapout()
+	url := "https://pokeapi.co/api/v2/location-area/"
+	mapout(url)
 	return nil
 }
 
-func mapout() error {
-	res, err := http.Get("http://www.google.com/robots.txt")
-	if err != nil {
+func mapout(url string) error {
+	res, err := http.Get(url)
+	if err != nil { //check for errors with the url
 		log.Fatal(err)
 	}
 	body, err := io.ReadAll(res.Body)
 	res.Body.Close()
-	if res.StatusCode > 299 {
+	if res.StatusCode > 299 { //Check for error related status codes
 		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
 	}
-	if err != nil {
+	if err != nil { //check for other errors with reading
 		log.Fatal(err)
 	}
-	fmt.Printf("%s", body)
+	type result struct {
+                Name    string
+                Url     string
+        }
+        type mappage struct {
+                Count           int
+                Next            string
+                Previous        string
+                Results         []result
+        }
+        var unmarshalledBody mappage
+        err2 := json.Unmarshal(body, &unmarshalledBody)
+        if err2 != nil {
+                fmt.Printf("%v", err2)
+                return err
+        }
+        for i := range unmarshalledBody.Results {
+                fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
+        }
         return nil
 }
 

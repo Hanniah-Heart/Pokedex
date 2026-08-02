@@ -7,7 +7,16 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
-##Commit P6: Map Command 0.2
+###Commit P7: Mapout Unmarshalling Mappages
+The map command now passes a url to mapout which relies on that url instead of its own static one. 
+Then mapout doesn't just print the raw text of the url but instead breaks it down into the 
+appropriate struct for our purposes. We might want to change that struct to exist by pointer 
+for the whole package, but we're not there yet.
+- Modified commandMap to pass a url to mapout.
+- Modified mapout to unmarshal the content it has read
+- Modified mapout further to print the names of each result from the mappage
+
+###Commit P6: Map Command 0.2
 I went a little further than I had to here but not far. We have the first version of our map
 command. It prints the wrong text but it's still printing text pulled from the internet. I did
 directly copy the text of [this manual section](https://pkg.go.dev/net/http#example-Get), but
