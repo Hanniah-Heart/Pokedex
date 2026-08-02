@@ -8,8 +8,8 @@ import (
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	map_conf := config {
-		prv_pg: "test!",
-		nxt_pg: "next",
+		prv_pg: "",
+		nxt_pg: "",
 	}
 	for true {
 		commandList := getCommandList()

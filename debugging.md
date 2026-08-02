@@ -7,6 +7,16 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+##Commit P6: Map Command 0.2
+I went a little further than I had to here but not far. We have the first version of our map
+command. It prints the wrong text but it's still printing text pulled from the internet. I did
+directly copy the text of [this manual section](https://pkg.go.dev/net/http#example-Get), but
+this commit is not available for profit or anything, just part of the history of making something
+that will matter more later. That said, I did immediately move that same text to a separate
+function called mapout which I'll be making available to both the map and mapb commands when done.
+- Modified commands.go to introduce the map command and the mapout function.
+- Modified main.go to remove the debug values inside map_conf
+
 ###Commit P5: Refactor 1
 Here we clean up what we're doing a little bit. I don't want to scroll endlessly on main.go this
 time around. I've moved the structs and commands into their own files. I still think repl.go is
