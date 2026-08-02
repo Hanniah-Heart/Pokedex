@@ -7,6 +7,14 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P2: Pointer to String
+We're now handling the thing passed into the commands as a reference to a string rather than a copy
+of the string. We also demonstrate that this is consistently changing the string throughout the
+entire use of the program by appending the string each time help is used. We don't do this with
+exit since exit will only run once and the contrast is helpful for debugging.
+- Modified main.go command functions to handle a pointer to a string rather than a copy.
+
+
 ###Commit P1: Debug String
 My goal here was simply to successfully pass SOMETHING into one of these commands.
 In go you have to do something with any variable you call and I printing strings helps,

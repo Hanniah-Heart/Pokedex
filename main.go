@@ -5,15 +5,16 @@ import (
 	"os"
 )
 
-func commandExit(debug_string string) error {
-	println(debug_string)
+func commandExit(debug_string *string) error {
+	println(*debug_string)
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp(debug_string string) error {
-	println(debug_string)
+func commandHelp(debug_string *string) error {
+	println(*debug_string)
+	*debug_string += " 1"
 	commandList := getCommandList()
 	fmt.Println("# Welcome to the Pokedex!")
 	fmt.Println()
@@ -33,7 +34,7 @@ type config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(string) error
+	callback    func(*string) error
 }
 
 func getCommandList() map[string]cliCommand {
@@ -70,7 +71,7 @@ func main() {
 		if exists == false {
 			fmt.Print("Unknown command")
 		} else {
-			err := cmd.callback(debug_string)
+			err := cmd.callback(&debug_string)
 			if err != nil {
 				fmt.Println(err)
 			}
