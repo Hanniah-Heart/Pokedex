@@ -7,6 +7,16 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P10: Map Back and Simplify
+I realized there was no reason to have the map commands worry whether they were at the start if
+I just set a more reasonable start. Now they only check if they can't paginate their direction and
+paginate if they can. Also there's two of them and I'm prioritizing snake case.
+- Modified main.go to set map conf.nxt pg at start.
+- Simplified commandMap to not worry whether previous page is blank.
+- Added commandMapBack under the command keyword mapb
+- Renamed mapout to mapOut (snake case) for clearer word distinction.
+
+
 ###Commit P9: Map Command Paginating
 The map command now moves to the next page appropriately. It recognized when it's on the first and
 last pages as well (although, if someone is on the last page, are they okay?).

@@ -9,7 +9,7 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	map_conf := config {
 		prv_pg: "",
-		nxt_pg: "",
+		nxt_pg: "https://pokeapi.co/api/v2/location-area/",
 	}
 	for true {
 		commandList := getCommandList()

@@ -22,27 +22,35 @@ func getCommandList() map[string]cliCommand {
                         name: "map",
                         description: "Show next map page",
                         callback: commandMap,
+                }, "mapb": {
+                        name: "mapb",
+                        description: "Show previous map page",
+                        callback: commandMapBack,
                 },
         }
         return commandList
 }
 
 func commandMap(map_conf *config) error {
-	url := ""
-	if map_conf.prv_pg == "" { //if we're at the start of the pages
-		url = "https://pokeapi.co/api/v2/location-area/"
-		map_conf.prv_pg = url
-		mapout(url, map_conf)
-	} else if map_conf.nxt_pg == "" { //if we're at the end of the pages
+	if map_conf.nxt_pg == "" {
 		println("There are no further pages")
 	} else {
-		url = map_conf.nxt_pg
-		mapout( url, map_conf)
+		mapOut(map_conf.nxt_pg, map_conf)
 	}
 	return nil
 }
 
-func mapout(url string, map_conf *config) error {
+func commandMapBack(map_conf *config) error {
+	if map_conf.prv_pg == "" {
+		println("you're on the first page")
+	} else {
+		mapOut(map_conf.prv_pg, map_conf)
+	}
+	return nil
+}
+
+
+func mapOut(url string, map_conf *config) error {
 	res, err := http.Get(url)
 	if err != nil { //check for errors with the url
 		log.Fatal(err)
@@ -65,6 +73,7 @@ func mapout(url string, map_conf *config) error {
                 fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
         }
 	map_conf.nxt_pg = unmarshalledBody.Next
+	map_conf.prv_pg = unmarshalledBody.Previous
         return nil
 }
 
