@@ -7,6 +7,13 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P3: Initialize a Config
+The goal we're working towards is passing a pointer to a config into a command and changing
+the original config repeatedly with commands. We're not there yet. Here we're just initializing
+the config that we'll be changing. In this case that's map_conf. Since we want to see that it
+worked and go will error if we don't do anything with it, we simply print it immediately.
+- Modified main.go to initialize a map_conf config and then print it immediately.
+
 ###Commit P2: Pointer to String
 We're now handling the thing passed into the commands as a reference to a string rather than a copy
 of the string. We also demonstrate that this is consistently changing the string throughout the

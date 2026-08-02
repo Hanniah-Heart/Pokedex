@@ -55,6 +55,11 @@ func getCommandList() map[string]cliCommand {
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	debug_string := "debug string 2"
+	map_conf := config {
+		prv_pg: "test!",
+		nxt_pg: "next",
+	}
+	fmt.Printf("%v", map_conf)
 	for true {
 		commandList := getCommandList()
 		fmt.Print("Pokedex > ")
