@@ -1,4 +1,4 @@
-# Debugging Log for PokeAPI Branch
+#Changelog for PokeAPI Branch
 This markdown file will be where I write what's going on in the commits I make while
 trying to write and debug my program to add the intended feature of this branch.
 
@@ -6,7 +6,14 @@ I'm trying to follow the [feature requests of the PokeAPI lesson](https://www.bo
 and add onto the initial CLI commands with commands that move back and forth between
 PokeAPI location endpoint pages.
 
-##Changelog
+##Commit History
+###Commit P11: Main Ready
+This branch passed its tests from boot.dev and I want it to be part of my main program.
+Having a debugging.md file that doesn't match the branch it's in doesn't make sense. This commit
+handles some related formalities.
+- Renamed debugging.md to changelog_pokeapi.md
+
+
 ###Commit P10: Map Back and Simplify
 I realized there was no reason to have the map commands worry whether they were at the start if
 I just set a more reasonable start. Now they only check if they can't paginate their direction and
