@@ -7,6 +7,19 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P5: Refactor 1
+Here we clean up what we're doing a little bit. I don't want to scroll endlessly on main.go this
+time around. I've moved the structs and commands into their own files. I still think repl.go is
+poorly named for what little it has, but we'll worry about that later. 
+- Modified main.go to remove the debug string.
+- Refactored main.go into commands.go and structs.go to limit file length while my IDE 
+	is nano and doesn't have code folding.
+
+
+###Commit P4: Pointer to Config
+We're successfully passing a config into the commands now.
+- Modified main.go to pass map_conf into the commands rather than the debug string.
+
 ###Commit P3: Initialize a Config
 The goal we're working towards is passing a pointer to a config into a command and changing
 the original config repeatedly with commands. We're not there yet. Here we're just initializing
