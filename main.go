@@ -5,13 +5,15 @@ import (
 	"os"
 )
 
-func commandExit() error {
+func commandExit(debug_string string) error {
+	println(debug_string)
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp() error {
+func commandHelp(debug_string string) error {
+	println(debug_string)
 	commandList := getCommandList()
 	fmt.Println("# Welcome to the Pokedex!")
 	fmt.Println()
@@ -23,10 +25,15 @@ func commandHelp() error {
 	return nil
 }
 
+type config struct {
+	prv_pg string
+	nxt_pg string
+}
+
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(string) error
 }
 
 func getCommandList() map[string]cliCommand {
@@ -46,6 +53,7 @@ func getCommandList() map[string]cliCommand {
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
+	debug_string := "debug string 2"
 	for true {
 		commandList := getCommandList()
 		fmt.Print("Pokedex > ")
@@ -62,7 +70,7 @@ func main() {
 		if exists == false {
 			fmt.Print("Unknown command")
 		} else {
-			err := cmd.callback()
+			err := cmd.callback(debug_string)
 			if err != nil {
 				fmt.Println(err)
 			}
