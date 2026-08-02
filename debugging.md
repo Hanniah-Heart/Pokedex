@@ -7,6 +7,11 @@ and add onto the initial CLI commands with commands that move back and forth bet
 PokeAPI location endpoint pages.
 
 ##Changelog
+###Commit P9: Map Command Paginating
+The map command now moves to the next page appropriately. It recognized when it's on the first and
+last pages as well (although, if someone is on the last page, are they okay?).
+- Modified commandMap and mapout so that the map command paginates forward.
+
 ###Commit P8: Incomplete but stable Map Ifs
 I'm trying to set up code that will appropriately determine which url is next while paginating.
 We're not there yet. I have what I think will be the relevant conditional structure, but
