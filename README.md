@@ -1,6 +1,6 @@
 # Pokedex
--# Note: this README will only be updated for main branch commits or other major commits.
--# See the branch log by the associated branch name for more specific documentation.
+Note: this README will only be updated for main branch commits or other major commits.
+See the branch log by the associated branch name for more specific documentation.
 ## Introduction
 This is a guided project instructed by [Boot.dev](https://www.boot.dev).
 

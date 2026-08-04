@@ -6,6 +6,14 @@ I'm trying to follow the [feature requests of the Caching lesson](https://www.bo
 and make "moving around the map" more snappy by implementing caching.
 
 ##Commit History
+###Commit C2: Fixing Debug Start
+I wasn't running the debugging commands I thought I was. I've changed what I need to in order to
+make this a stable commit that without syntax errors as opposed to all those caught by go vet . in
+commit c1.
+- Replaced types with placeholder ints but commented what things really should be.
+- Added placeholder empty variables and returns to make methods syntax correct.
+
+
 ###Commit C1: Setup to Develop Caching
 This commit just moves things around and writes down what the lesson instructions tell me to do
 without making serious attempts to accomplish those instructions. I'm definitely adopting a
