@@ -36,13 +36,14 @@ func (cache Cache) Add(key string, val []byte) {
 }
 
 func (cache Cache) Get(key string) ([]byte, bool) {
-	// get an entry from the cache
-	// bool should be true if entry was found and false if it wasn't
 	cache.mutex.RLock()
 	defer cache.mutex.RUnlock()
-	var a []byte
-	var b bool
-	return a, b
+	targetEntry, ok := cache.entry[key]
+	if !ok {
+		var nullVal []byte
+		return nullVal, ok
+	}
+	return targetEntry.val, true
 }
 
 func (cache Cache) reapLoop(interval time.Duration) {
