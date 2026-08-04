@@ -1,41 +1,45 @@
 package pokecache
 import (
-//	"sync"
+	"sync"
 	"time"
 )
 
 
 type cacheEntry struct {
 	createdAt time.Time
-	val int //this should be []byte but I'm substituting for now
+	val []byte
 }
 
 type Cache struct {
-	entry int //this should be a map[string]cacheEntry but I'm substituting for now.
-	mutex int //this should really be a mutex *sync.Mutex but I'm substituting for now.
+	entry map[string]cacheEntry
+	mutex *sync.RWMutex
 }
 
-func NewCache(interval time.Duration) {
-	// create new cache with configurable interval
-	NAME := Cache {
-		entry: 0, // ???
-		mutex: 0, // ???
+func NewCache(interval time.Duration) *Cache {
+	var newCache Cache
+	newCache.reapLoop(interval)
+	return &newCache
+}
+
+func (cache Cache) Add(key string, val []byte) {
+	_, ok := cache.entry[key]
+	if ok {
+		return
 	}
-	NAME.reapLoop(interval)
-}
-
-func (cache Cache) Add(key string) ([]byte, bool) {
-	// add a new entry to the cache
-	// should use a sync.mutex
-	var a []byte
-	var b bool
-	return a, b
+	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
+	newEntry := cacheEntry {
+		createdAt: time.Now(),
+		val: val,
+	}
+	cache.entry[key] = newEntry
 }
 
 func (cache Cache) Get(key string) ([]byte, bool) {
 	// get an entry from the cache
 	// bool should be true if entry was found and false if it wasn't
-	// should use a sync.mutex
+	cache.mutex.RLock()
+	defer cache.mutex.RUnlock()
 	var a []byte
 	var b bool
 	return a, b
