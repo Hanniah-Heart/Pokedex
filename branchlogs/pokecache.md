@@ -6,6 +6,17 @@ I'm trying to follow the [feature requests of the Caching lesson](https://www.bo
 and make "moving around the map" more snappy by implementing caching.
 
 ##Commit History
+###Commit C7: Encapsulated mapOut Function
+This commit we made sure that mapOut actually implements the Cache.Add and Cache.Get methods. We
+also fixed some mistakes in new caches and made sure all methods refer to the Cache address not a
+copy of the cache.
+- Updated this log
+- Modified mapOut function use encapsulatin methods
+- Modified NewCache to initialize properly
+- Modified Cache struct to use a mutex rather than nonsensically using a pointer to a mutex
+- Modified all Cache methods to refer to the address of the cache, not a copy
+
+
 ###Commit C6: Stable but Unencapsulated mapOut Update
 This commit I was trying to update the mapOut function check if there was already a cached entry 
 for the information we're collecting from the map and return the cache instead. I got that working

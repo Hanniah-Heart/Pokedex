@@ -2,6 +2,7 @@ package pokecache
 import (
 	"sync"
 	"time"
+	"errors"
 )
 
 
@@ -12,19 +13,23 @@ type cacheEntry struct {
 
 type Cache struct {
 	Entry map[string]cacheEntry
-	mutex *sync.RWMutex
+	mutex sync.RWMutex
 }
 
 func NewCache(interval time.Duration) *Cache { // consider changing this later to allow for runtime mutable configuration of the interval so that the user can adjust their memory usage to their preference during play in case we don't want them to require restarting.
-	var newCache Cache
+	newCache := Cache{
+		Entry: make(map[string]cacheEntry),
+	}
 	go newCache.reapLoop(interval)
 	return &newCache
 }
 
-func (cache Cache) Add(key string, val []byte) {
+func (cache *Cache) Add(key string, val []byte) error {
+	cache.mutex.RLock()
 	_, ok := cache.Entry[key]
+	cache.mutex.RUnlock()
 	if ok {
-		return
+		return errors.New("%v is already a key in the cache")
 	}
 	cache.mutex.Lock()
 	defer cache.mutex.Unlock()
@@ -33,9 +38,10 @@ func (cache Cache) Add(key string, val []byte) {
 		Val: val,
 	}
 	cache.Entry[key] = newEntry
+	return nil
 }
 
-func (cache Cache) Get(key string) ([]byte, bool) {
+func (cache *Cache) Get(key string) ([]byte, bool) {
 	cache.mutex.RLock()
 	defer cache.mutex.RUnlock()
 	targetEntry, ok := cache.Entry[key]
@@ -47,7 +53,7 @@ func (cache Cache) Get(key string) ([]byte, bool) {
 	return targetEntry.Val, true
 }
 
-func (cache Cache) reapLoop(interval time.Duration) { // consider changing this later to allow for runtime mutable configuration of the interval so that the user can adjust their memory usage to their preference during play in case we don't want them to require restarting.
+func (cache *Cache) reapLoop(interval time.Duration) { // consider changing this later to allow for runtime mutable configuration of the interval so that the user can adjust their memory usage to their preference during play in case we don't want them to require restarting.
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 	for true {

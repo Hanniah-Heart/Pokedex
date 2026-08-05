@@ -52,15 +52,15 @@ func commandMapBack(map_conf *config) error {
 
 func mapOut(url string, map_conf *config) error {
 	var unmarshalledBody mappage
-	if _, ok := map_conf.CacheAddress.Entry[url]; ok {
-		err2 := json.Unmarshal(map_conf.CacheAddress.Entry[url].Val, &unmarshalledBody)
+	if body, ok := map_conf.CacheAddress.Get(url); ok {
+		err2 := json.Unmarshal(body, &unmarshalledBody)
 		if err2 != nil {
 			fmt.Printf("%v", err2)
 			return err2
 		}
 	} else {
 		res, err := http.Get(url)
-		body, err := io.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		res.Body.Close()
 		if res.StatusCode > 299 { //Check for error related status codes
 			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
@@ -68,10 +68,13 @@ func mapOut(url string, map_conf *config) error {
 		if err != nil { //check for other errors with reading
 			log.Fatal(err)
 		}
-	        err2 := json.Unmarshal(body, &unmarshalledBody)
-		if err2 != nil {
-			fmt.Printf("%v", err2)
-			return err2
+		err = map_conf.CacheAddress.Add(url, body)
+		if err != nil {
+			return err
+		}
+	        err = json.Unmarshal(body, &unmarshalledBody)
+		if err != nil {
+			return err
 		}
 	}
 	for i := range unmarshalledBody.Results {
