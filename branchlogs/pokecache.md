@@ -6,6 +6,26 @@ I'm trying to follow the [feature requests of the Caching lesson](https://www.bo
 and make "moving around the map" more snappy by implementing caching.
 
 ##Commit History
+###Commit C6: Stable but Unencapsulated mapOut Update
+This commit I was trying to update the mapOut function check if there was already a cached entry 
+for the information we're collecting from the map and return the cache instead. I got that working
+and stable, but I realized when I was finally done that this was obviously supposed to implement
+the Cache.Get method. I did not do that. Next Commit I will probably switch to doing that.
+####Current Goal:
+Update your code that makes requests to the PokeAPI to use the cache. Create the cache once and 
+reuse it in your PokeAPI request layer. If you already have the data for a given URL (which is our 
+cache key) in the cache, you should use that instead of making a new request. Whenever you do make 
+a request, you should add the response to the cache.
+####Changes
+- Updated this log.
+- Modified the mapOut funciton to check for cached information and call it instead.
+- Modified go.mod to capitalize the url as appropriate to my github repository url.
+- Modified pokecache.go to export variables as needed.
+- Modified main.go to accept exported variables as needed.
+- Modified structs.go to export fields as needed.
+
+
+
 ###Commit C5: Stable reapLoop Method
 We now have a stable Cache.reapLoop method that's called by Cache.NewCache on a separate goroutine
 to delete cache entries that are older than the interval. The interval is also now a setting in the

@@ -51,30 +51,35 @@ func commandMapBack(map_conf *config) error {
 
 
 func mapOut(url string, map_conf *config) error {
-	res, err := http.Get(url)
-	if err != nil { //check for errors with the url
-		log.Fatal(err)
+	var unmarshalledBody mappage
+	if _, ok := map_conf.CacheAddress.Entry[url]; ok {
+		err2 := json.Unmarshal(map_conf.CacheAddress.Entry[url].Val, &unmarshalledBody)
+		if err2 != nil {
+			fmt.Printf("%v", err2)
+			return err2
+		}
+	} else {
+		res, err := http.Get(url)
+		body, err := io.ReadAll(res.Body)
+		res.Body.Close()
+		if res.StatusCode > 299 { //Check for error related status codes
+			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+		}
+		if err != nil { //check for other errors with reading
+			log.Fatal(err)
+		}
+	        err2 := json.Unmarshal(body, &unmarshalledBody)
+		if err2 != nil {
+			fmt.Printf("%v", err2)
+			return err2
+		}
 	}
-	body, err := io.ReadAll(res.Body)
-	res.Body.Close()
-	if res.StatusCode > 299 { //Check for error related status codes
-		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+	for i := range unmarshalledBody.Results {
+		fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
 	}
-	if err != nil { //check for other errors with reading
-		log.Fatal(err)
-	}
-        var unmarshalledBody mappage
-        err2 := json.Unmarshal(body, &unmarshalledBody)
-        if err2 != nil {
-                fmt.Printf("%v", err2)
-                return err
-        }
-        for i := range unmarshalledBody.Results {
-                fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
-        }
 	map_conf.nxt_pg = unmarshalledBody.Next
 	map_conf.prv_pg = unmarshalledBody.Previous
-        return nil
+	return nil
 }
 
 func commandExit(map_conf *config) error {

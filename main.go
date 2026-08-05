@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"time"
+	pokecache "github.com/Hanniah-Heart/Pokedexcli/internal/pokecache"
 )
 
 func main() {
@@ -13,6 +14,8 @@ func main() {
 		nxt_pg: "https://pokeapi.co/api/v2/location-area/",
 		reapingInterval: interval,
 	}
+	newCache := pokecache.NewCache(map_conf.reapingInterval)
+	map_conf.CacheAddress = newCache
 	scanner := bufio.NewScanner(os.Stdin)
 	for true {
 		commandList := getCommandList()
