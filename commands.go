@@ -26,9 +26,18 @@ func getCommandList() map[string]cliCommand {
                         name: "mapb",
                         description: "Show previous map page",
                         callback: commandMapBack,
+                }, "explore": {
+                        name: "explore",
+                        description: "Show information about location named in first argument",
+                        callback: commandExplore,
                 },
         }
         return commandList
+}
+
+func commandExplore(map_conf *config) error {
+	// share information about the specific location
+	return nil
 }
 
 func commandMap(map_conf *config) error {

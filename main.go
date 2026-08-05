@@ -29,6 +29,13 @@ func main() {
 			continue
 		}
 		userCommand := (cleanInput(scanner.Text()))[0]
+		arguments := (cleanInput(scanner.Text()))[1:]
+		//figure out how to implement 
+		//print(*arguments)
+		//Why is printing arguments giving a memory address?
+		if false {
+			print(arguments)
+		}
 		cmd, exists := commandList[userCommand]
 		if exists == false {
 			fmt.Print("Unknown command")
