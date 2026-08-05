@@ -6,6 +6,13 @@ I'm trying to follow the [feature requests of the Caching lesson](https://www.bo
 and make "moving around the map" more snappy by implementing caching.
 
 ##Commit History
+###Commit C8: Main Ready
+Handled formalities so that this branch can be cleanly merged or such into main.
+- Updated README.md with expected Merge Commit name and description.
+- Updated this log
+- Added pokecache_test.go that somehow got missed
+
+
 ###Commit C7: Encapsulated mapOut Function
 This commit we made sure that mapOut actually implements the Cache.Add and Cache.Get methods. We
 also fixed some mistakes in new caches and made sure all methods refer to the Cache address not a
