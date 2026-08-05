@@ -3,14 +3,20 @@ import (
 	"fmt"
 	"bufio"
 	"os"
+	"time"
+	pokecache "github.com/Hanniah-Heart/Pokedexcli/internal/pokecache"
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	interval, _ := time.ParseDuration("5s")
 	map_conf := config {
 		prv_pg: "",
 		nxt_pg: "https://pokeapi.co/api/v2/location-area/",
+		reapingInterval: interval,
 	}
+	newCache := pokecache.NewCache(map_conf.reapingInterval)
+	map_conf.CacheAddress = newCache
+	scanner := bufio.NewScanner(os.Stdin)
 	for true {
 		commandList := getCommandList()
 		fmt.Print("Pokedex > ")

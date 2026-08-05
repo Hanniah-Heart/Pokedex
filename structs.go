@@ -1,4 +1,8 @@
 package main
+import (
+	"time"
+	pokecache "github.com/Hanniah-Heart/Pokedexcli/internal/pokecache"
+)
 
 type result struct {
 	Name    string
@@ -15,6 +19,8 @@ type mappage struct {
 type config struct {
         prv_pg string
         nxt_pg string
+	reapingInterval time.Duration
+	CacheAddress *pokecache.Cache
 }
 
 type cliCommand struct {

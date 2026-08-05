@@ -1,5 +1,6 @@
 # Pokedex
-
+Note: this README will only be updated for main branch commits or other major commits.
+See the branch log by the associated branch name for more specific documentation.
 ## Introduction
 This is a guided project instructed by [Boot.dev](https://www.boot.dev).
 
@@ -11,10 +12,24 @@ In the second lesson we're told to keep a git location for this project without 
 ## Functionality at present
 This REPL program now supports 4 recognized commands (seen under help command), and handles
 errors, piped inputs with End-of-File's, and empty user input. The most relevant commands are
-map and mapb which paginate through lists of 20 location names.
+map and mapb which paginate through lists of 20 location names. Anything collected from the
+internet is now cached temporarily and reused if possible to avoid unnecessary internet calls.
 
 
 ## Changelog
+### Commit 6: Caching
+Implements caching so that anything collected from the internet is now cached temporarily and
+reused if possible to avoid unncessary internet calls.
+- Updated README.md 's branchlog note to not rely on markdown that github doesn't recognize.
+- Added a branchlog for the Caching feature branch
+- Modified the mapOut function to implement caching
+- Corrected the go.mod file 's capitalization
+- Added internal/pokecache/pokecache.go which focuses on implementing caching
+- Modified main.go properly intialized the modified code, data, and variables
+- Modified structs.go so the config struct supports caching
+- Added requested pokecache_test.go file
+
+
 ### Commit 5: PokeAPI
 Adds the map and mapb commands for the REPL which pull information from the PokeAPI and then lists
 a page of 20 locations which can be cycled through with map (forward) and mapb (back).
