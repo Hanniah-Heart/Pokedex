@@ -1,4 +1,5 @@
 package main
+import "time"
 
 type result struct {
 	Name    string
@@ -15,6 +16,7 @@ type mappage struct {
 type config struct {
         prv_pg string
         nxt_pg string
+	reapingInterval time.Duration
 }
 
 type cliCommand struct {

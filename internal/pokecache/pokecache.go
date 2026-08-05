@@ -15,9 +15,9 @@ type Cache struct {
 	mutex *sync.RWMutex
 }
 
-func NewCache(interval time.Duration) *Cache {
+func NewCache(interval time.Duration) *Cache { // consider changing this later to allow for runtime mutable configuration of the interval so that the user can adjust their memory usage to their preference during play in case we don't want them to require restarting.
 	var newCache Cache
-	newCache.reapLoop(interval)
+	go newCache.reapLoop(interval)
 	return &newCache
 }
 
@@ -43,12 +43,24 @@ func (cache Cache) Get(key string) ([]byte, bool) {
 		var nullVal []byte
 		return nullVal, ok
 	}
+	//targetEntry.createdAt = time.Now() //unrequested feature to reset the reaping clock when the cache entry is gotten
 	return targetEntry.val, true
 }
 
-func (cache Cache) reapLoop(interval time.Duration) {
-	// after interval seconds, destroy associated cache
-	// should use a sync.mutex
+func (cache Cache) reapLoop(interval time.Duration) { // consider changing this later to allow for runtime mutable configuration of the interval so that the user can adjust their memory usage to their preference during play in case we don't want them to require restarting.
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for true {
+		<- ticker.C
+		for key, _ := range cache.entry {
+			destroyAt := cache.entry[key].createdAt.Add(interval)
+			if time.Now().After(destroyAt) {
+				cache.mutex.Lock()
+				delete(cache.entry, key)
+				cache.mutex.Unlock()
+			}
+		}
+	}
 }
 
 /*

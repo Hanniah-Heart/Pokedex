@@ -6,6 +6,42 @@ I'm trying to follow the [feature requests of the Caching lesson](https://www.bo
 and make "moving around the map" more snappy by implementing caching.
 
 ##Commit History
+###Commit C5: Stable reapLoop Method
+We now have a stable Cache.reapLoop method that's called by Cache.NewCache on a separate goroutine
+to delete cache entries that are older than the interval. The interval is also now a setting in the
+main config.
+- Updated this log
+- Modified reapLoop to delete old entries on a ticker
+- Modified NewCache to call reapLoop on a new goroutine
+- Modified the config struct to include the reaping interval
+- Modified the map_conf declaration to include the reaping interval
+- Added comments to reflect possible future features
+	- Runtime configurable reaping interval
+	- Cache entry refresh upon get call
+- Built and tested the program to make sure it's still working
+	- This likely is irrelevant since the main program doesn't call the pokecache package but
+
+
+###Commit C4: Stable Get Method
+Like the last method, I don't have confirmation this is functional but I have confirmation it
+is error free. All I did is add code that seems like it should handle Cache.Get 's purpose
+correctly.
+- Updated this log
+- Added parser-error free code to the Cache.Get method
+- Corrected this log's Commit C3 section to say parser-error free rather than error free
+
+
+###Commit C3: Stable Add Method
+I have no errors here and my types are all correct again and we've added what might be the correct
+way of handling the Cache.Add method. I don't have tests for it, but it's stable and progress.
+- Updated this log
+- Added parser-error free code to the Cache.Add method
+- Included appropriate mutual exclusions inside Cache.Add and Cache.Get
+- Fixed Types to how they should be
+- Modified NewCache to declare a Cache without any value assignment
+- Modified NewCache to return the address of the new cache
+
+
 ###Commit C2: Fixing Debug Start
 I wasn't running the debugging commands I thought I was. I've changed what I need to in order to
 make this a stable commit that without syntax errors as opposed to all those caught by go vet . in

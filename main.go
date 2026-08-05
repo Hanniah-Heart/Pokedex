@@ -3,14 +3,17 @@ import (
 	"fmt"
 	"bufio"
 	"os"
+	"time"
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	interval, _ := time.ParseDuration("5s")
 	map_conf := config {
 		prv_pg: "",
 		nxt_pg: "https://pokeapi.co/api/v2/location-area/",
+		reapingInterval: interval,
 	}
+	scanner := bufio.NewScanner(os.Stdin)
 	for true {
 		commandList := getCommandList()
 		fmt.Print("Pokedex > ")
