@@ -7,12 +7,22 @@ by adding a command that allows the user to collect information about specific l
 the map. This will implement positional arguments.
 
 ##Commit History
+###Commit E2: Stable Argument Rejection
+This commit I just made sure that all commands can handle arguments passed to them even though the
+default behavior I've given them all is to say that arguments aren't allowed. This will change but
+is syntax-error free progress versus said functions not even listening for any user arguments.
+- Updated this Branchlog
+- Modified main.go to pass arguments through the cmd.callback
+- Modified commands.go to include stable code handling arguments from the cmd.callback
+- Modified cliCommand struct to expect a list of strings as well
+
+
 ###Commit E1: Development Setup
 I'm setting the minimum amount of code and log information to guide myself on further development.
 - Added this Branchlog
 - Modified commandList to include explore
 - Added stable but otherwise empty commandExplore function
-- Modified main.go to implement arguments into cmd.callback (in progress)
+- Added code and comment to main.go to prepare to implement arguments into cmd.callback
 
 ##Checklist for Main Ready Commit
 - ( ) All intended actual changes commited in last commit

@@ -35,12 +35,18 @@ func getCommandList() map[string]cliCommand {
         return commandList
 }
 
-func commandExplore(map_conf *config) error {
+func commandExplore(map_conf *config, args []string) error {
+        if args != nil {
+		fmt.Println("expected no arguments recieved %v", len(args))
+	}
 	// share information about the specific location
 	return nil
 }
 
-func commandMap(map_conf *config) error {
+func commandMap(map_conf *config, args []string) error {
+        if args != nil {
+		fmt.Println("expected no arguments recieved %v", len(args))
+	}
 	if map_conf.nxt_pg == "" {
 		println("There are no further pages")
 	} else {
@@ -49,7 +55,10 @@ func commandMap(map_conf *config) error {
 	return nil
 }
 
-func commandMapBack(map_conf *config) error {
+func commandMapBack(map_conf *config, args []string) error {
+        if args != nil {
+		fmt.Println("expected no arguments recieved %v", len(args))
+	}
 	if map_conf.prv_pg == "" {
 		println("you're on the first page")
 	} else {
@@ -94,14 +103,20 @@ func mapOut(url string, map_conf *config) error {
 	return nil
 }
 
-func commandExit(map_conf *config) error {
+func commandExit(map_conf *config, args []string) error {
+        if args != nil {
+		fmt.Println("expected no arguments recieved %v", len(args))
+	}
         fmt.Println("Closing the Pokedex... Goodbye!")
         os.Exit(0)
         return nil
 }
 
-func commandHelp(map_conf *config) error {
-        commandList := getCommandList()
+func commandHelp(map_conf *config, args []string) error {
+        if args != nil {
+		fmt.Println("expected no arguments recieved %v", len(args))
+	}
+	commandList := getCommandList()
         fmt.Println("# Welcome to the Pokedex!")
         fmt.Println()
         fmt.Println("## Usage:")
