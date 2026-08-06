@@ -67,6 +67,7 @@ func callURL(map_conf *config, url string, unmarshalledBody any) (error) {
 func commandMap(map_conf *config, args []string) error {
         if len(args) >= 1 {
 		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
 	}
 	if map_conf.nxt_pg == "" {
 		println("There are no further pages")
@@ -79,6 +80,7 @@ func commandMap(map_conf *config, args []string) error {
 func commandMapBack(map_conf *config, args []string) error {
         if len(args) >= 1 {
 		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
 	}
 	if map_conf.prv_pg == "" {
 		println("you're on the first page")

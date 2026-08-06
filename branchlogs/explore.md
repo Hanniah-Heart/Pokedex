@@ -7,6 +7,20 @@ by adding a command that allows the user to collect information about specific l
 the map. This will implement positional arguments.
 
 ##Commit History
+###Commit E5: Main Ready
+I did fix one mistake found in final testing: map and mapback weren't avoiding use when called
+with the wrong number of errors. Now they return nil appropriately. Otherwise, we're just
+completing the checklist before a pull request.
+- Added return nil to commandMap and commandMapb when args length is wrong.
+####Checklist for Main Ready Commit
+- (~) All intended actual changes commited in last commit
+	One change added this commit, but it's fine.
+- (✓) README.md updated to reflect change from last main branch commit
+- (✓) This log updated to reflect Main Ready Commit
+- (✓) Executable re-compiled
+- (✓) Lesson Passed / Requests Met
+
+
 ###Commit E4: Command Refactor and Explore Caching
 There was previously a block of code I had basically repeated from mapOut to commandExplore. I've
 refactored that block into its own function to dry out the code. I've also condensed several error
@@ -44,9 +58,3 @@ I'm setting the minimum amount of code and log information to guide myself on fu
 - Modified commandList to include explore
 - Added stable but otherwise empty commandExplore function
 - Added code and comment to main.go to prepare to implement arguments into cmd.callback
-
-##Checklist for Main Ready Commit
-- ( ) All intended actual changes commited in last commit
-- ( ) README.md updated to reflect change from last main branch commit
-- ( ) This log updated to reflect Main Ready Commit
-- ( ) Executable re-compiled
