@@ -7,6 +7,17 @@ by adding a command that allows the user to collect information about specific l
 the map. This will implement positional arguments.
 
 ##Commit History
+###Commit E3: Working Explore Command
+I already have the explore command working correctly. Maybe there's somethings to clean up before
+main ready, but this looks nice. I also corrected the handling of arguments. Instead of expecting
+nil as the zero value of an empty slice like I was (which make sense but I still should have
+tested), I'm now checking the length of the arguments slice.
+- Updated this Branchlog
+- Added locationAreaStructs.go to properly unmarshall the data commandExplore collects.
+- Modified commandExplore to expected functionality
+- Modified all commands to handle argument count more appropriately
+
+
 ###Commit E2: Stable Argument Rejection
 This commit I just made sure that all commands can handle arguments passed to them even though the
 default behavior I've given them all is to say that arguments aren't allowed. This will change but

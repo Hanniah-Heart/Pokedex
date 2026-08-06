@@ -36,16 +36,28 @@ func getCommandList() map[string]cliCommand {
 }
 
 func commandExplore(map_conf *config, args []string) error {
-        if args != nil {
-		fmt.Println("expected no arguments recieved %v", len(args))
+        if len(args) != 1 {
+		fmt.Println("expected 1 argument recieved ", len(args), "\n", args)
+		return nil
 	}
-	// share information about the specific location
+	body, _ := getFromWeb("https://pokeapi.co/api/v2/location-area/" + args[0])
+	var unmarshalledBody locationArea
+        err := json.Unmarshal(body, &unmarshalledBody)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Exploring ", args[0], "...")
+	fmt.Println("Found Pokemon:")
+	output := unmarshalledBody.Pokemon_Encounters
+	for i := range output {
+		fmt.Printf("%s\n", output[i].Pokemon.Name)
+	}
 	return nil
 }
 
 func commandMap(map_conf *config, args []string) error {
-        if args != nil {
-		fmt.Println("expected no arguments recieved %v", len(args))
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
 	}
 	if map_conf.nxt_pg == "" {
 		println("There are no further pages")
@@ -56,8 +68,8 @@ func commandMap(map_conf *config, args []string) error {
 }
 
 func commandMapBack(map_conf *config, args []string) error {
-        if args != nil {
-		fmt.Println("expected no arguments recieved %v", len(args))
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
 	}
 	if map_conf.prv_pg == "" {
 		println("you're on the first page")
@@ -77,14 +89,9 @@ func mapOut(url string, map_conf *config) error {
 			return err2
 		}
 	} else {
-		res, err := http.Get(url)
-		body, err = io.ReadAll(res.Body)
-		res.Body.Close()
-		if res.StatusCode > 299 { //Check for error related status codes
-			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-		}
-		if err != nil { //check for other errors with reading
-			log.Fatal(err)
+		body, err := getFromWeb(url)
+		if err != nil {
+			return err
 		}
 		err = map_conf.CacheAddress.Add(url, body)
 		if err != nil {
@@ -103,9 +110,24 @@ func mapOut(url string, map_conf *config) error {
 	return nil
 }
 
+func getFromWeb(url string) ([]byte, error) {
+	res, err := http.Get(url)
+	body, err := io.ReadAll(res.Body)
+	res.Body.Close()
+	if res.StatusCode > 299 { //Check for error related status codes
+		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+	}
+	if err != nil { //check for other errors with reading
+		log.Fatal(err)
+	}
+	return body, err
+}
+
+
 func commandExit(map_conf *config, args []string) error {
-        if args != nil {
-		fmt.Println("expected no arguments recieved %v", len(args))
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
 	}
         fmt.Println("Closing the Pokedex... Goodbye!")
         os.Exit(0)
@@ -113,8 +135,9 @@ func commandExit(map_conf *config, args []string) error {
 }
 
 func commandHelp(map_conf *config, args []string) error {
-        if args != nil {
-		fmt.Println("expected no arguments recieved %v", len(args))
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
 	}
 	commandList := getCommandList()
         fmt.Println("# Welcome to the Pokedex!")
