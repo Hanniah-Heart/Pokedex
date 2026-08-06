@@ -26,12 +26,49 @@ func getCommandList() map[string]cliCommand {
                         name: "mapb",
                         description: "Show previous map page",
                         callback: commandMapBack,
+                }, "explore": {
+                        name: "explore",
+                        description: "Show information about location named in first argument",
+                        callback: commandExplore,
                 },
         }
         return commandList
 }
 
-func commandMap(map_conf *config) error {
+func commandExplore(map_conf *config, args []string) error {
+        if len(args) != 1 {
+		fmt.Println("expected 1 argument recieved ", len(args), "\n", args)
+		return nil
+	}
+	var unmarshalledBody locationArea
+	url := "https://pokeapi.co/api/v2/location-area/" + args[0]
+	if err := callURL(map_conf, url, &unmarshalledBody); err != nil { return err }
+	fmt.Println("Exploring ", args[0], "...")
+	fmt.Println("Found Pokemon:")
+	output := unmarshalledBody.Pokemon_Encounters
+	for i := range output {
+		fmt.Printf("%s\n", output[i].Pokemon.Name)
+	}
+	return nil
+}
+
+func callURL(map_conf *config, url string, unmarshalledBody any) (error) {
+	if body, ok := map_conf.CacheAddress.Get(url); ok {
+		if err := json.Unmarshal(body, &unmarshalledBody); err != nil { return err }
+	} else {
+		body, err := getFromWeb(url)
+		if err != nil {	return err }
+		if err = map_conf.CacheAddress.Add(url, body); err != nil { return err }
+	        if err = json.Unmarshal(body, &unmarshalledBody); err != nil { return err }
+	}
+	return nil
+}
+
+func commandMap(map_conf *config, args []string) error {
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
+	}
 	if map_conf.nxt_pg == "" {
 		println("There are no further pages")
 	} else {
@@ -40,7 +77,11 @@ func commandMap(map_conf *config) error {
 	return nil
 }
 
-func commandMapBack(map_conf *config) error {
+func commandMapBack(map_conf *config, args []string) error {
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
+	}
 	if map_conf.prv_pg == "" {
 		println("you're on the first page")
 	} else {
@@ -52,31 +93,7 @@ func commandMapBack(map_conf *config) error {
 
 func mapOut(url string, map_conf *config) error {
 	var unmarshalledBody mappage
-	if body, ok := map_conf.CacheAddress.Get(url); ok {
-		err2 := json.Unmarshal(body, &unmarshalledBody)
-		if err2 != nil {
-			fmt.Printf("%v", err2)
-			return err2
-		}
-	} else {
-		res, err := http.Get(url)
-		body, err = io.ReadAll(res.Body)
-		res.Body.Close()
-		if res.StatusCode > 299 { //Check for error related status codes
-			log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-		}
-		if err != nil { //check for other errors with reading
-			log.Fatal(err)
-		}
-		err = map_conf.CacheAddress.Add(url, body)
-		if err != nil {
-			return err
-		}
-	        err = json.Unmarshal(body, &unmarshalledBody)
-		if err != nil {
-			return err
-		}
-	}
+	if err := callURL(map_conf, url, &unmarshalledBody); err != nil {return err}
 	for i := range unmarshalledBody.Results {
 		fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
 	}
@@ -85,14 +102,34 @@ func mapOut(url string, map_conf *config) error {
 	return nil
 }
 
-func commandExit(map_conf *config) error {
+func getFromWeb(url string) ([]byte, error) {
+	res, err := http.Get(url)
+	body, err := io.ReadAll(res.Body)
+	res.Body.Close()
+	if res.StatusCode > 299 { //Check for error related status codes
+		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
+	}
+	if err != nil { log.Fatal(err) }
+	return body, err
+}
+
+
+func commandExit(map_conf *config, args []string) error {
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
+	}
         fmt.Println("Closing the Pokedex... Goodbye!")
         os.Exit(0)
         return nil
 }
 
-func commandHelp(map_conf *config) error {
-        commandList := getCommandList()
+func commandHelp(map_conf *config, args []string) error {
+        if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		return nil
+	}
+	commandList := getCommandList()
         fmt.Println("# Welcome to the Pokedex!")
         fmt.Println()
         fmt.Println("## Usage:")

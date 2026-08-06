@@ -17,6 +17,20 @@ internet is now cached temporarily and reused if possible to avoid unnecessary i
 
 
 ## Changelog
+### Commit 7: Explore
+We now allow the user an additional "Explore" command which lets them see what pokemon are in a
+given location. Additionally, more work has been done to ensure caching is implemented and code is
+kept DRY and line-concise.
+- Added Explore command
+- Added branchlogs/explore.md
+- Modified main.go to allow commands to listen for arguments
+- Modified cliCommand struct to allow commands to listen for arguments
+- Added locationAreaStructs.go to describe the data structure needed for explore command
+- Modified commands to listen for and handle arguments from user input
+- Added getFromWeb function to handle the web calls and caching based on url's
+- DRY'ed mapOut function significantly
+
+
 ### Commit 6: Caching
 Implements caching so that anything collected from the internet is now cached temporarily and
 reused if possible to avoid unncessary internet calls.

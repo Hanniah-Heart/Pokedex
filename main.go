@@ -29,11 +29,12 @@ func main() {
 			continue
 		}
 		userCommand := (cleanInput(scanner.Text()))[0]
+		arguments := (cleanInput(scanner.Text()))[1:]
 		cmd, exists := commandList[userCommand]
 		if exists == false {
 			fmt.Print("Unknown command")
 		} else {
-			err := cmd.callback(&map_conf)
+			err := cmd.callback(&map_conf, arguments)
 			if err != nil {
 				fmt.Println(err)
 			}
