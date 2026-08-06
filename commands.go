@@ -40,17 +40,26 @@ func commandExplore(map_conf *config, args []string) error {
 		fmt.Println("expected 1 argument recieved ", len(args), "\n", args)
 		return nil
 	}
-	body, _ := getFromWeb("https://pokeapi.co/api/v2/location-area/" + args[0])
 	var unmarshalledBody locationArea
-        err := json.Unmarshal(body, &unmarshalledBody)
-	if err != nil {
-		return err
-	}
+	url := "https://pokeapi.co/api/v2/location-area/" + args[0]
+	if err := callURL(map_conf, url, &unmarshalledBody); err != nil { return err }
 	fmt.Println("Exploring ", args[0], "...")
 	fmt.Println("Found Pokemon:")
 	output := unmarshalledBody.Pokemon_Encounters
 	for i := range output {
 		fmt.Printf("%s\n", output[i].Pokemon.Name)
+	}
+	return nil
+}
+
+func callURL(map_conf *config, url string, unmarshalledBody any) (error) {
+	if body, ok := map_conf.CacheAddress.Get(url); ok {
+		if err := json.Unmarshal(body, &unmarshalledBody); err != nil { return err }
+	} else {
+		body, err := getFromWeb(url)
+		if err != nil {	return err }
+		if err = map_conf.CacheAddress.Add(url, body); err != nil { return err }
+	        if err = json.Unmarshal(body, &unmarshalledBody); err != nil { return err }
 	}
 	return nil
 }
@@ -82,26 +91,7 @@ func commandMapBack(map_conf *config, args []string) error {
 
 func mapOut(url string, map_conf *config) error {
 	var unmarshalledBody mappage
-	if body, ok := map_conf.CacheAddress.Get(url); ok {
-		err2 := json.Unmarshal(body, &unmarshalledBody)
-		if err2 != nil {
-			fmt.Printf("%v", err2)
-			return err2
-		}
-	} else {
-		body, err := getFromWeb(url)
-		if err != nil {
-			return err
-		}
-		err = map_conf.CacheAddress.Add(url, body)
-		if err != nil {
-			return err
-		}
-	        err = json.Unmarshal(body, &unmarshalledBody)
-		if err != nil {
-			return err
-		}
-	}
+	if err := callURL(map_conf, url, &unmarshalledBody); err != nil {return err}
 	for i := range unmarshalledBody.Results {
 		fmt.Printf("%s\n", unmarshalledBody.Results[i].Name)
 	}
@@ -117,9 +107,7 @@ func getFromWeb(url string) ([]byte, error) {
 	if res.StatusCode > 299 { //Check for error related status codes
 		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
 	}
-	if err != nil { //check for other errors with reading
-		log.Fatal(err)
-	}
+	if err != nil { log.Fatal(err) }
 	return body, err
 }
 

@@ -7,6 +7,16 @@ by adding a command that allows the user to collect information about specific l
 the map. This will implement positional arguments.
 
 ##Commit History
+###Commit E4: Command Refactor and Explore Caching
+There was previously a block of code I had basically repeated from mapOut to commandExplore. I've
+refactored that block into its own function to dry out the code. I've also condensed several error
+checks into one line with the call that risked their error, thereby psuedo-drying 3 lines per
+several calls. The code runs beautifully and is much more concise. I'm so happy.
+- Updated this branchlog
+- Modified commands.go functions to be line-concise and DRY.
+- Added functionality to commands.go which ensures DRY implementation of caching and http calls.
+
+
 ###Commit E3: Working Explore Command
 I already have the explore command working correctly. Maybe there's somethings to clean up before
 main ready, but this looks nice. I also corrected the handling of arguments. Instead of expecting
