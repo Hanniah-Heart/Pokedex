@@ -21,6 +21,7 @@ type config struct {
         nxt_pg string
 	reapingInterval time.Duration
 	CacheAddress *pokecache.Cache
+	Pokedex map[string]pokemon
 }
 
 type cliCommand struct {
