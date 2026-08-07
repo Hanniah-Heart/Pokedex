@@ -30,9 +30,35 @@ func getCommandList() map[string]cliCommand {
                         name: "explore",
                         description: "Show information about location named in first argument",
                         callback: commandExplore,
+                }, "catch": {
+                        name: "catch",
+                        description: "Attempt to catch the pokemon named in the first argument",
+                        callback: commandCatch,
                 },
         }
         return commandList
+}
+
+func commandCatch(map_conf *config, args []string) error {
+        if len(args) != 1 {
+		fmt.Println("expected 1 argument recieved ", len(args), "\n", args)
+		return nil
+	}
+	// var unmarshalledBody pokemon <--- needs described in a structs file
+	// url := "https://pokeapi.co/api/v2/pokemon/" + args[0]
+	// callURL(url)
+	// fmt.Println("Throwing a Pokeball at ",args[0],"...")
+	// targetPokemon := unmarshalledBody. ...
+	// baseExperience := targetPokemon. ... Base_Experience
+	// Math Stuff
+	// Pokedex := make(map[string]pokemon) <--- probably should be in main.go and map_conf
+	/*
+	if caught {
+		Pokedex[args[0]] = pokemon
+	} else { fmt.Println(args[0], "escaped!"; return nil }
+
+	*/
+	return nil
 }
 
 func commandExplore(map_conf *config, args []string) error {
