@@ -39,9 +39,25 @@ func getCommandList() map[string]cliCommand {
                         name: "inspect",
                         description: "Show information about caught pokemon named in first argument",
                         callback: commandInspect,
+                }, "pokedex": {
+                        name: "pokedex",
+                        description: "Show list of caught pokemon",
+                        callback: commandPokedex,
                 },
         }
         return commandList
+}
+
+func commandPokedex(map_conf *config, args []string) error {
+	if len(args) >= 1 {
+		fmt.Println("expected no arguments recieved", len(args), "\n", args)
+		return nil
+	}
+	fmt.Printf("Your Pokedex:\n")
+	for _, target := range map_conf.Pokedex {
+		fmt.Printf(" - %v\n", target.Name)
+	}
+	return nil
 }
 
 func commandInspect(map_conf *config, args []string) error {
@@ -78,7 +94,8 @@ func commandCatch(map_conf *config, args []string) error {
 	if err := callURL(map_conf, url, &unmarshalledBody); err != nil { return err }
 	fmt.Printf("Throwing a Pokeball at %v...\n", unmarshalledBody.Name)
 	if rand.Intn(300) > unmarshalledBody.Base_Experience {
-		fmt.Printf("%v was caught!", unmarshalledBody.Name)
+		fmt.Printf("%v was caught!\n", unmarshalledBody.Name)
+		fmt.Printf("You may now inspect it with the inspect command.\n")
 		map_conf.Pokedex[unmarshalledBody.Name] = unmarshalledBody
 		return nil
 	} else { fmt.Println(unmarshalledBody.Name, "escaped!"); return nil }
