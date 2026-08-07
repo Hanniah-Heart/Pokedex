@@ -35,9 +35,37 @@ func getCommandList() map[string]cliCommand {
                         name: "catch",
                         description: "Attempt to catch the pokemon named in the first argument",
                         callback: commandCatch,
+                }, "inspect": {
+                        name: "inspect",
+                        description: "Show information about caught pokemon named in first argument",
+                        callback: commandInspect,
                 },
         }
         return commandList
+}
+
+func commandInspect(map_conf *config, args []string) error {
+        if len(args) != 1 {
+		fmt.Println("expected 1 argument recieved", len(args), "\n", args)
+		return nil
+	}
+	if targetPokemon, ok := map_conf.Pokedex[args[0]]; !ok {
+		fmt.Printf("you have not caught that pokemon")
+		return nil
+	} else {
+		fmt.Printf("Name: %v\n", targetPokemon.Name)
+		fmt.Printf("Height: %v\n",targetPokemon.Height)
+		fmt.Printf("Weight: %v\n",targetPokemon.Weight)
+		fmt.Printf("Stats:\n")
+		for _, stat := range targetPokemon.Stats {
+			fmt.Printf("    -%v: %v\n",stat.Stat.Name, stat.Base_Stat)
+		}
+		fmt.Printf("Types:\n")
+		for _, t := range targetPokemon.Types {
+			fmt.Printf("    - %v\n", t.Type.Name)
+		}
+	}
+	return nil
 }
 
 func commandCatch(map_conf *config, args []string) error {
@@ -53,7 +81,7 @@ func commandCatch(map_conf *config, args []string) error {
 		fmt.Printf("%v was caught!", unmarshalledBody.Name)
 		map_conf.Pokedex[unmarshalledBody.Name] = unmarshalledBody
 		return nil
-	} else { fmt.Println(args[0], "escaped!"); return nil }
+	} else { fmt.Println(unmarshalledBody.Name, "escaped!"); return nil }
 }
 
 func commandExplore(map_conf *config, args []string) error {

@@ -10,9 +10,9 @@ feature.
 ##Checklists
 ###Checklist for Main Ready Commit
 - (✓) All intended actual changes commited in current or last commit
-- ( ) README.md updated to reflect change from last main branch commit
-- () This log updated to reflect Main Ready Commit
-- ( ) Executable re-compiled
+- (✓) README.md updated to reflect change from last main branch commit
+- (✓) This log updated to reflect Main Ready Commit
+- (oops) Executable re-compiled
 - (✓) Lesson Passed / Requests Met
 
 ###Feature Request Checklist
