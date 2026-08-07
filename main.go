@@ -9,10 +9,12 @@ import (
 
 func main() {
 	interval, _ := time.ParseDuration("5s")
+	pokedex := make(map[string]pokemon)
 	map_conf := config {
 		prv_pg: "",
 		nxt_pg: "https://pokeapi.co/api/v2/location-area/",
 		reapingInterval: interval,
+		Pokedex: pokedex,
 	}
 	newCache := pokecache.NewCache(map_conf.reapingInterval)
 	map_conf.CacheAddress = newCache

@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
+	"math/rand"
 )
 
 func getCommandList() map[string]cliCommand {
@@ -30,14 +31,34 @@ func getCommandList() map[string]cliCommand {
                         name: "explore",
                         description: "Show information about location named in first argument",
                         callback: commandExplore,
+                }, "catch": {
+                        name: "catch",
+                        description: "Attempt to catch the pokemon named in the first argument",
+                        callback: commandCatch,
                 },
         }
         return commandList
 }
 
+func commandCatch(map_conf *config, args []string) error {
+        if len(args) != 1 {
+		fmt.Println("expected 1 argument recieved", len(args), "\n", args)
+		return nil
+	}
+	var unmarshalledBody pokemon
+	url := "https://pokeapi.co/api/v2/pokemon/" + args[0]
+	if err := callURL(map_conf, url, &unmarshalledBody); err != nil { return err }
+	fmt.Printf("Throwing a Pokeball at %v...\n", unmarshalledBody.Name)
+	if rand.Intn(300) > unmarshalledBody.Base_Experience {
+		fmt.Printf("%v was caught!", unmarshalledBody.Name)
+		map_conf.Pokedex[unmarshalledBody.Name] = unmarshalledBody
+		return nil
+	} else { fmt.Println(args[0], "escaped!"); return nil }
+}
+
 func commandExplore(map_conf *config, args []string) error {
         if len(args) != 1 {
-		fmt.Println("expected 1 argument recieved ", len(args), "\n", args)
+		fmt.Println("expected 1 argument recieved", len(args), "\n", args)
 		return nil
 	}
 	var unmarshalledBody locationArea
@@ -52,7 +73,7 @@ func commandExplore(map_conf *config, args []string) error {
 	return nil
 }
 
-func callURL(map_conf *config, url string, unmarshalledBody any) (error) {
+func callURL[T bodyStructure](map_conf *config, url string, unmarshalledBody T) error {
 	if body, ok := map_conf.CacheAddress.Get(url); ok {
 		if err := json.Unmarshal(body, &unmarshalledBody); err != nil { return err }
 	} else {
@@ -66,7 +87,7 @@ func callURL(map_conf *config, url string, unmarshalledBody any) (error) {
 
 func commandMap(map_conf *config, args []string) error {
         if len(args) >= 1 {
-		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		fmt.Println("expected no arguments recieved", len(args), "\n", args)
 		return nil
 	}
 	if map_conf.nxt_pg == "" {
@@ -79,7 +100,7 @@ func commandMap(map_conf *config, args []string) error {
 
 func commandMapBack(map_conf *config, args []string) error {
         if len(args) >= 1 {
-		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		fmt.Println("expected no arguments recieved", len(args), "\n", args)
 		return nil
 	}
 	if map_conf.prv_pg == "" {
@@ -116,7 +137,7 @@ func getFromWeb(url string) ([]byte, error) {
 
 func commandExit(map_conf *config, args []string) error {
         if len(args) >= 1 {
-		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		fmt.Println("expected no arguments recieved", len(args), "\n", args)
 		return nil
 	}
         fmt.Println("Closing the Pokedex... Goodbye!")
@@ -126,7 +147,7 @@ func commandExit(map_conf *config, args []string) error {
 
 func commandHelp(map_conf *config, args []string) error {
         if len(args) >= 1 {
-		fmt.Println("expected no arguments recieved ", len(args), "\n", args)
+		fmt.Println("expected no arguments recieved", len(args), "\n", args)
 		return nil
 	}
 	commandList := getCommandList()
